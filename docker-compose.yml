@@ -1,0 +1,63 @@
+version: '3.6'
+
+services:
+  app:
+    build: ./
+    container_name: app
+    working_dir: /var/www
+    ports:
+      - "3000:80"
+    volumes:
+      - ../app/:/var/www
+
+  api:
+    build: ./
+    container_name: api
+    working_dir: /var/www
+    ports:
+      - "4000:80"
+    volumes:
+      - ../api/:/var/www
+
+  mysql-app:
+    image: mysql:5.7
+    container_name: mysql-app
+    volumes:
+      - mysql-app-data:/var/lib/mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=app
+
+  mysql-api:
+    image: mysql:5.7
+    container_name: mysql-api
+    volumes:
+      - mysql-api-data:/var/lib/mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=api
+
+  redis-app:
+    image: redis:alpine
+    container_name: redis-app
+    volumes:
+      - redis-app-data:/data
+
+  redis-api:
+    image: redis:alpine
+    container_name: redis-api
+    volumes:
+      - redis-api-data:/data
+
+volumes:
+  mysql-app-data:
+    driver: local
+
+  mysql-api-data:
+    driver: local
+
+  redis-app-data:
+    driver: local
+
+  redis-api-data:
+    driver: local
